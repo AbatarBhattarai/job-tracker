@@ -1,21 +1,39 @@
-#Job Application Tracker 
-#Built by Abatar Bhattarai
+# Job Application Tracker v2 
+# Built by Abatar Bhattarai 
 
-applications= []
+import csv 
+import os 
+from datetime import date 
 
-def add_job(company,role,status):
-    job = {"company":company,"role":role,"status":status}
-    applications.append(job)
-    print(f"Added: {company} | {role} | {status}")
+FILE = "applications.csv"
 
+def add_job():
+    company = input("Company name:")
+    role = input("Role: ")
+    status = input("Status (Applied/Interview/Rejected):")
+    today = str(date.today())
+
+    with open(FILE, "a" , newline="") as f:
+        writer=csv.writer(f)
+        writer.writerow([company,role,status,today])
+    print(f":saved: {company} |{role} | {status} | {today}")
+           
 def view_jobs():
-    if len(applications) == 0:
-        print("No applicationyet.")
-    else:
-        for job in applications:
-            print(f"{job['company']} | {job['role']} | {job['status']}")
+        if not os.path.exists(FILE):
+            print("No application yet.")
+            return 
+        with open(FILE, "r") as f:
+            reader =csv.reader(f)
+            for row in reader:
+                print(f"{row[0]} | {row[1]} | {row[2]} | {row[3]}")
 
-#Test it 
-add_job("Google","Software Intern","Applied")
-add_job("Amazon","Data Analyst Intern","Applied")
-view_jobs()
+#Run
+print("1. Add application")
+print("2. View application")
+choice = input("choose: ")
+
+if choice == "1":
+    add_job()
+elif choice == "2":
+    view_jobs()
+
